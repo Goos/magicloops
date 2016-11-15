@@ -19,7 +19,10 @@ from scipy import optimize
 import time
 
 
-%matplotlib inline
+#%matplotlib inline
+
+#Get Data
+df = pd.read_csv('data/HIV_stat2.csv',index_col=0)
 
 def define_clfs_params():
 
@@ -32,10 +35,10 @@ def define_clfs_params():
         'NB': GaussianNB(),
         'DT': DecisionTreeClassifier(),
         'SGD': SGDClassifier(loss="hinge", penalty="l2"),
-        'KNN': KNeighborsClassifier(n_neighbors=3) 
+        'KNN': KNeighborsClassifier(n_neighbors=3)
             }
 
-    grid = { 
+    grid = {
     'RF':{'n_estimators': [1,10,100,1000,10000], 'max_depth': [1,5,10,20,50,100], 'max_features': ['sqrt','log2'],'min_samples_split': [2,5,10]},
     'LR': { 'penalty': ['l1','l2'], 'C': [0.00001,0.0001,0.001,0.01,0.1,1,10]},
     'SGD': { 'loss': ['hinge','log','perceptron'], 'penalty': ['l2','l1','elasticnet']},
@@ -55,22 +58,25 @@ def clf_loop(models_to_run, clfs, grid, X, y):
         for index,clf in enumerate([clfs[x] for x in models_to_run]):
             print models_to_run[index]
             parameter_values = grid[models_to_run[index]]
+            count = 0
             for p in ParameterGrid(parameter_values):
                 try:
+                    count +=1
+                    file_short = "{}_{}_{}".format(str(x), str(index), count)
                     clf.set_params(**p)
                     print clf
                     y_pred_probs = clf.fit(X_train, y_train).predict_proba(X_test)[:,1]
                     #threshold = np.sort(y_pred_probs)[::-1][int(.05*len(y_pred_probs))]
                     #print threshold
                     print precision_at_k(y_test,y_pred_probs,.05)
-                    #plot_precision_recall_n(y_test,y_pred_probs,clf)
+                    plot_precision_recall_n(y_test,y_pred_probs,clf, file_short)
                 except IndexError, e:
                     print 'Error:',e
                     continue
 
 
 
-def plot_precision_recall_n(y_true, y_prob, model_name):
+def plot_precision_recall_n(y_true, y_prob, model_name, filename_short):
     from sklearn.metrics import precision_recall_curve
     y_score = y_prob
     precision_curve, recall_curve, pr_thresholds = precision_recall_curve(y_true, y_score)
@@ -91,11 +97,12 @@ def plot_precision_recall_n(y_true, y_prob, model_name):
     ax2 = ax1.twinx()
     ax2.plot(pct_above_per_thresh, recall_curve, 'r')
     ax2.set_ylabel('recall', color='r')
-    
+
     name = model_name
     plt.title(name)
-    #plt.savefig(name)
-    plt.show()
+    filename = "results/PR_curve_{}.png".format(filename_short)
+    plt.savefig(filename)
+    #plt.show()
 
 def precision_at_k(y_true, y_scores, k):
     threshold = np.sort(y_scores)[::-1][int(k*len(y_scores))]
@@ -103,20 +110,20 @@ def precision_at_k(y_true, y_scores, k):
     return metrics.precision_score(y_true, y_pred)
 
 
-def main(): 
+def main():
     clfs, grid = define_clfs_params()
-    models_to_run=['KNN','RF','LR','ET','AB','GB','NB','DT']
+    #models_to_run=['KNN','RF','LR','ET','AB','GB','NB','DT']
+    models_to_run=['RF','LR']
     #get X and y
-    features  =  ['RevolvingUtilizationOfUnsecuredLines', 'DebtRatio', 'age', 'NumberOfTimes90DaysLate']
+    #features  =  ['RevolvingUtilizationOfUnsecuredLines', 'DebtRatio', 'age', 'NumberOfTimes90DaysLate']
+    features = ['a6', 'b1',	'bf1', 'bf2']
     X = df[features]
-    y = df.SeriousDlqin2yrs
+    #X = df
+    y = df.hivfilled
     clf_loop(models_to_run, clfs,grid, X,y)
+
 
 
 
 if __name__ == '__main__':
     main()
-
-
-
-
