@@ -21,8 +21,6 @@ import time
 
 #%matplotlib inline
 
-#Get Data
-df = pd.read_csv('data/HIV_stat2.csv',index_col=0)
 
 def define_clfs_params():
 
@@ -109,20 +107,56 @@ def precision_at_k(y_true, y_scores, k):
     y_pred = np.asarray([1 if i >= threshold else 0 for i in y_scores])
     return metrics.precision_score(y_true, y_pred)
 
+dataset = 'data/gss2014.csv'
+df = pd.read_csv(dataset,index_col=0)
+features = ['age', 'sex', 'race', 'educ']
+dv = 'partyid_str_rep'
+X = df[features]
+y = df[dv]
+
+
+
+def message(dataset, dv, features):
+    header  =   "-"*70
+    message =  \
+    """
+    {0} \n
+    Running Sci-Kit Learn Magic Loop on Dataset {1} ...
+    Dependent Variable: {2}
+    Features: {3} \n
+    {0} \n
+    """.format(header, dataset, str(dv), str(features))
+    return message
+
+
 
 def main():
+
+    # Get DV and Features
+    features = ['age', 'sex', 'race', 'educ']
+    dv = 'partyid_str_rep'
+    X = df[features]
+    y = df[dv]
+
+    #print(message(dataset, dv, features))
+
+    print ("-"*70)
+    print ("Running Sci-Kit Learn Magic Loop on Dataset {} ...".format(dataset))
+    print ("Dependent Variable: {}".format(str(dv)))
+    print ("Features: {}".format(str(features)))
+    print ("-"*70)
+
+
     clfs, grid = define_clfs_params()
     #models_to_run=['KNN','RF','LR','ET','AB','GB','NB','DT']
-    models_to_run=['RF','LR']
+    models_to_run=['RF', 'DT']
     #get X and y
-    #features  =  ['RevolvingUtilizationOfUnsecuredLines', 'DebtRatio', 'age', 'NumberOfTimes90DaysLate']
-    features = ['a6', 'b1',	'bf1', 'bf2']
-    X = df[features]
-    #X = df
-    y = df.hivfilled
     clf_loop(models_to_run, clfs,grid, X,y)
 
 
+#Get Data
+dataset = 'data/gss2014.csv'
+df = pd.read_csv(dataset,index_col=0)
 
 
 if __name__ == '__main__':
