@@ -108,10 +108,16 @@ def precision_at_k(y_true, y_scores, k):
     return metrics.precision_score(y_true, y_pred)
 
 
-def main(dataset, outcome, features):
+def main(dataset, outcome, features, all_features=False):
 
     # Set Outcome and Features
     df = pd.read_csv(dataset,index_col=0)
+    
+    if all_features == False:
+        features = features
+    elif all_features == True:
+        features = list(df.ix[:, df.columns != outcome].columns) # All Features Except Outcome
+
     X = df[features]
     y = df[outcome]
 
