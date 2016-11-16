@@ -8,4 +8,4 @@ For more information, visit the tutorial and consult the documentaion.
 
 ## Acknowledgements
 
-This tutorial makes use of a [modified submodule](https://github.com/jmausolf/magicloops), originally forked from @rayidghani [magicloops](https://github.com/rayidghani/magicloops). It has been updated to run in Python2 or Python3. In addition, my modified fork modifies the plotting code and several of the functions to take a user-specified dataset, outcome variable, and features.
+This [code](https://github.com/jmausolf/magicloops) was originally forked from @rayidghani [magicloops](https://github.com/rayidghani/magicloops). It has been updated to run in Python2 or Python3. In addition, this fork modifies the plotting code and several of the functions to take a user-specified dataset, outcome variable, and features.
