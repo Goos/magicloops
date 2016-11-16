@@ -57,7 +57,9 @@ def clf_loop(models_to_run, clfs, grid, X, y):
             for p in ParameterGrid(parameter_values):
                 try:
                     count +=1
-                    file_short = "{}_{}_{}".format(str(x), str(index), count)
+                    model = str(clf)[0:15]
+                    #file_short = "{}_{}_{}".format(str(x), str(index), count)
+                    file_short = "{}_{}_{}".format(str(model), str(index), count)
                     clf.set_params(**p)
                     print clf
                     y_pred_probs = clf.fit(X_train, y_train).predict_proba(X_test)[:,1]
@@ -92,9 +94,9 @@ def plot_precision_recall_n(y_true, y_prob, model_name, filename_short):
     ax2 = ax1.twinx()
     ax2.plot(pct_above_per_thresh, recall_curve, 'r')
     ax2.set_ylabel('recall', color='r')
-
-    name = model_name
-    plt.title(name)
+    plt.rcParams.update({'axes.titlesize': 'small'})
+    plt.rcParams.update({'figure.titlesize': 'small'})
+    plt.title(model_name)
     filename = "results/PR_curve_{}.png".format(filename_short)
     plt.savefig(filename)
     plt.close('all')
