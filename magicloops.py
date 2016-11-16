@@ -1,15 +1,16 @@
 from __future__ import division
 import pandas as pd
 import numpy as np
-from sklearn import preprocessing, cross_validation, svm, metrics, tree, decomposition, svm
+from sklearn import preprocessing, svm, metrics, tree, decomposition, svm, model_selection
 from sklearn.ensemble import RandomForestClassifier, ExtraTreesClassifier, GradientBoostingClassifier, AdaBoostClassifier
 from sklearn.linear_model import LogisticRegression, Perceptron, SGDClassifier, OrthogonalMatchingPursuit, RandomizedLogisticRegression
 from sklearn.neighbors.nearest_centroid import NearestCentroid
 from sklearn.naive_bayes import GaussianNB, MultinomialNB, BernoulliNB
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.cross_validation import train_test_split
-from sklearn.grid_search import ParameterGrid
+from sklearn.model_selection import train_test_split
+from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import ParameterGrid
 from sklearn.metrics import *
 from sklearn.preprocessing import StandardScaler
 import random
