@@ -17,6 +17,7 @@ import pylab as pl
 import matplotlib.pyplot as plt
 from scipy import optimize
 import time
+np.random.seed(524)
 
 
 def define_clfs_params():
@@ -118,18 +119,17 @@ def main(dataset, outcome, features, all_features=False):
     X = df[features]
     y = df[outcome]
 
+    # Print Message
     print ("-"*70)
     print ("Running Sci-Kit Learn Magic Loop on Dataset {} ...".format(dataset))
     print ("Dependent Variable: {}".format(str(outcome)))
     print ("Features: {}".format(str(features)))
     print ("-"*70)
 
-
+    # Main Loop
     clfs, grid = define_clfs_params()
     models_to_run=['KNN','RF','LR','ET','AB','GB','NB','DT']
-    #models_to_run=['ET']
     clf_loop(models_to_run, clfs,grid, X,y)
-
 
 if __name__ == '__main__':
     main()
